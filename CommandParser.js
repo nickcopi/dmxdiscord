@@ -5,7 +5,9 @@ module.exports = class CommandParser{
 			'drugs':this.drugs.bind(this),
 			'dealers':this.dealers.bind(this),
 			'clients':this.clients.bind(this),
-			'upgrades': this.upgrades.bind(this)
+			'upgrades': this.upgrades.bind(this),
+			'overview': this.overview.bind(this),
+			'combine': this.combine.bind(this)
 		}
 	}
 	async parseCommand(msg,author){
@@ -55,10 +57,42 @@ module.exports = class CommandParser{
 			})
 		);
 	}
+	async overview(options,author){
+		const level = (await this.gameManager.getLevel(author.id));
+		const money = (await this.gameManager.getMoney(author.id));
+		const drugs = (await this.gameManager.getDrugs(author.id));
+		const clients = (await this.gameManager.getClients(author.id));
+		return this.makeEmbed('Overview','',
+			[
+				{
+					name:'Level',
+					value:String(level)
+				},
+				{
+					name:'Money',
+					value:'$' + money
+				},
+				{
+					name:'Drugs Stashed',
+					value:String(drugs.length)
+				},
+				{
+					name:'Clients unlocked',
+					value:String(clients.length)
+				}
+			]
+		);
+	}
+	async combine(options,author){
+		if(options.length < 4) return 'Requires 4 parameters.';
+		return await this.gameManager.combine(author.id,options);
+	}
+
+
 
 	formatDrugs(drugs){
 		return this.makeEmbed('Drugs',drugs.map((drug,i)=>{
-			return `${i+1}: ${drug.getGrams()} g of ${drug.getName()} at level ${drug.getLevel()} worth ${drug.getStackCost()}`;
+			return `${i+1}: ${drug.getGrams()} g of ${drug.getName()} at level ${drug.getLevel()} worth $${drug.getCost()} each.`;
 		}).join('\n'));
 	}
 

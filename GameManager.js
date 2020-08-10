@@ -19,4 +19,27 @@ module.exports = class GameManager{
 	async getUpgrades(id){
 		return (await this.getGame(id)).getUpgrades();
 	}
+	async getLevel(id){
+		return (await this.getGame(id)).getLevel();
+	}
+	async getMoney(id){
+		return (await this.getGame(id)).getMoney();
+	}
+	async saveGame(id, game){
+		const save = game.getSerializedSave();
+		this.dbManager.writeSave(id,save);
+	}
+	async combine(id,options){
+		const game = (await this.getGame(id));
+		const drugs = game.getDrugs();
+		const drug1 = drugs[Number(options[0])-1];
+		const drug2 = drugs[Number(options[2])-1];
+		if(!drug1 || !drug2) return 'Invalid drug index!';
+		const result =  game.combineDrugs(drug1,drug2,Number(options[1]),Number(options[3]));
+		if(result.success){
+			this.saveGame(id,game);
+		}
+		return result.flavorText;
+
+	}
 }
