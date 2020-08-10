@@ -2,12 +2,36 @@ module.exports = class CommandParser{
 	constructor(gameManager){
 		this.gameManager = gameManager;
 		this.actions = {
-			'drugs':this.drugs.bind(this),
-			'dealers':this.dealers.bind(this),
-			'clients':this.clients.bind(this),
-			'upgrades': this.upgrades.bind(this),
-			'overview': this.overview.bind(this),
-			'combine': this.combine.bind(this)
+			'drugs':{
+				callback: this.drugs.bind(this),
+			},
+			'dealers':{
+				callback:this.dealers.bind(this),
+			},
+			'clients':{
+				callback: this.clients.bind(this),
+			},
+			'upgrades': {
+				callback: this.upgrades.bind(this),
+			},
+			'overview': {
+				callback: this.overview.bind(this),
+			},
+			'combine': {
+				callback: this.combine.bind(this),
+			},
+			'sell': {
+				callback: this.sell.bind(this),
+				usage:'!sell [client index] [drug index] [number of sales to make (default 1)]'
+			},
+			'buy': {
+				callback: this.buy.bind(this),
+				usage:'!buy [dealer index] [number of drug to buy (default 1)]'
+			},
+			'upgrade': {
+				callback: this.upgrade.bind(this),
+				usage:'!upgrade [upgrade index]'
+			}
 		}
 	}
 	async parseCommand(msg,author){
@@ -17,7 +41,7 @@ module.exports = class CommandParser{
 		const command = words.shift().toLowerCase();
 		console.log(command,words);
 		if(!(command in this.actions)) return;
-		return await this.actions[command](words,author);
+		return await this.actions[command].callback(words,author);
 
 	}
 	async drugs(options, author){
@@ -87,7 +111,19 @@ module.exports = class CommandParser{
 		if(options.length < 4) return 'Requires 4 parameters.';
 		return await this.gameManager.combine(author.id,options);
 	}
+	async sell(options,author){
+		if(options.length < 2) return 'Requires 2 parameters.';
+		return await this.gameManager.sell(author.id,options);
 
+	}
+	async buy(options,author){
+		if(options.length < 1) return 'Requires 1 parameter.';
+		return await this.gameManager.buy(author.id,options);
+	}
+	async upgrade(options,author){
+		if(options.length < 1) return 'Requires 1 parameter.';
+		return await this.gameManager.upgrade(author.id,options);
+	}
 
 
 	formatDrugs(drugs){

@@ -42,4 +42,44 @@ module.exports = class GameManager{
 		return result.flavorText;
 
 	}
+	async sell(id,options){
+		const game = (await this.getGame(id));
+		const drugs = game.getDrugs();
+		const clients = game.getClients();
+		const client = clients[options[0]-1];
+		const drug = drugs[options[1]-1];
+		if(!client) return 'Invalid client index!';
+		if(!drug) return 'Invalid drug index!';
+		let quantity = Number(options[2]);
+		if(isNaN(quantity)) quantity = 1;
+		const result = game.sellToClient(drug, client, quantity);
+		if(result.success){
+			this.saveGame(id,game);
+		}
+		return result.flavorText;
+	}
+	async buy(id,options){
+		const game = (await this.getGame(id));
+		const dealers = game.getDealers();
+		const dealer = dealers[options[0]-1];
+		if(!dealer) return 'Invalid dealer index!';
+		let quantity = Number(options[1]);
+		if(isNaN(quantity)) quantity = 1;
+		const result = game.buyFromDealer(dealer,quantity);
+		if(result.success){
+			this.saveGame(id,game);
+		}
+		return result.flavorText;
+	}
+	async upgrade(id,options){
+		const game = (await this.getGame(id));
+		const upgrades = game.getUpgrades();
+		const upgrade = upgrades[options[0]-1];
+		if(!upgrade) return 'Invalid upgrade index!';
+		const result = game.buyUpgrade(upgrade);
+		if(result.success){
+			this.saveGame(id,game);
+		}
+		return result.flavorText;
+	}
 }
