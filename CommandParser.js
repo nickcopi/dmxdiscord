@@ -4,37 +4,51 @@ module.exports = class CommandParser{
 		this.actions = {
 			'drugs':{
 				callback: this.drugs.bind(this),
+				description:'Lists currently owned drugs.'
 			},
 			'dealers':{
 				callback:this.dealers.bind(this),
+				description:'Lists current drug dealers.'
 			},
 			'clients':{
 				callback: this.clients.bind(this),
+				description:'Lists current drug clients.'
 			},
 			'upgrades': {
 				callback: this.upgrades.bind(this),
-			},
-			'overview': {
-				callback: this.overview.bind(this),
-			},
-			'combine': {
-				callback: this.combine.bind(this),
-			},
-			'sell': {
-				callback: this.sell.bind(this),
-				usage:'!sell [client index] [drug index] [number of sales to make (default 1)]'
-			},
-			'buy': {
-				callback: this.buy.bind(this),
-				usage:'!buy [dealer index] [number of drug to buy (default 1)]'
-			},
-			'upgrade': {
-				callback: this.upgrade.bind(this),
-				usage:'!upgrade [upgrade index]'
+				description:'Lists available upgrades.'
 			},
 			'recipes': {
 				callback: this.recipes.bind(this),
-				usage:'!recipes'
+				description:'Lists learned recipes.'
+			},
+			'overview': {
+				callback: this.overview.bind(this),
+				description:'Shows profile overview.'
+			},
+			'combine': {
+				callback: this.combine.bind(this),
+				usage:'!combine [drug1 index] [drug1 quantity to combine] [drug2 index] [drug2 quantity to combine]',
+				description:'Combines drugs together to create a new drug.'
+			},
+			'sell': {
+				callback: this.sell.bind(this),
+				usage:'!sell [client index] [drug index] [number of sales to make (default 1)]',
+				description:'Sells a drug to a specified client.'
+			},
+			'buy': {
+				callback: this.buy.bind(this),
+				usage:'!buy [dealer index] [number of drug to buy (default 1)]',
+				description:'Buys a specified amount of a drug from a dealer.'
+			},
+			'upgrade': {
+				callback: this.upgrade.bind(this),
+				usage:'!upgrade [upgrade index]',
+				description:'Purchases a specified upgrade.'
+			},
+			'help': {
+				callback: this.help.bind(this),
+				description:'Shows this help menu.'
 			}
 		}
 	}
@@ -133,6 +147,15 @@ module.exports = class CommandParser{
 		return this.makeEmbed('Recipes',
 			recipes.map((recipe)=>recipe.toString() ).join('')
 		);
+	}
+	async help(options,author){
+		const help = Object.entries(this.actions).map(([k,v])=>{
+			return {
+				name: '!' + k,
+				value: v.description + (v.usage?'\n' + v.usage:'')
+			}
+		});
+		return this.makeEmbed('Help','',help);
 	}
 
 
