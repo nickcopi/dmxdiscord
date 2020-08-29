@@ -86,4 +86,9 @@ module.exports = class GameManager{
 		const game = (await this.getGame(id));
 		return game.getRecipes();
 	}
+	async reset(id,options){
+		const game = (await this.getGame(id));
+		game.reset();
+		this.saveGame(id,game);
+	}
 }

@@ -46,6 +46,10 @@ module.exports = class CommandParser{
 				usage:'!upgrade [upgrade index]',
 				description:'Purchases a specified upgrade.'
 			},
+			'reset': {
+				callback: this.reset.bind(this),
+				description:'Resets save.'
+			},
 			'help': {
 				callback: this.help.bind(this),
 				description:'Shows this help menu.'
@@ -147,6 +151,10 @@ module.exports = class CommandParser{
 		return this.makeEmbed('Recipes',
 			recipes.map((recipe)=>recipe.toString() ).join('')
 		);
+	}
+	async reset(options,author){
+		await this.gameManager.reset(author.id,options);
+		return 'Save reset.';
 	}
 	async help(options,author){
 		const help = Object.entries(this.actions).map(([k,v])=>{
