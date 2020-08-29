@@ -31,6 +31,10 @@ module.exports = class CommandParser{
 			'upgrade': {
 				callback: this.upgrade.bind(this),
 				usage:'!upgrade [upgrade index]'
+			},
+			'recipes': {
+				callback: this.recipes.bind(this),
+				usage:'!recipes'
 			}
 		}
 	}
@@ -123,6 +127,12 @@ module.exports = class CommandParser{
 	async upgrade(options,author){
 		if(options.length < 1) return 'Requires 1 parameter.';
 		return await this.gameManager.upgrade(author.id,options);
+	}
+	async recipes(options,author){
+		const recipes = await this.gameManager.getRecipes(author.id,options);
+		return this.makeEmbed('Recipes',
+			recipes.map((recipe)=>recipe.toString() ).join('')
+		);
 	}
 
 

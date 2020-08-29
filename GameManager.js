@@ -82,4 +82,8 @@ module.exports = class GameManager{
 		}
 		return result.flavorText;
 	}
+	async getRecipes(id,options){
+		const game = (await this.getGame(id));
+		return game.getRecipes();
+	}
 }
