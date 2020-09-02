@@ -1,5 +1,5 @@
 const DrugMaker = require('./drugMaker').default;
-const DbManager = require('./DbManager');
+const DbManager = require('./FirestoreManager');
 module.exports = class GameManager{
 	constructor(){
 		this.dbManager = new DbManager();

@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "eris": "^0.13.3"
+    "eris": "^0.13.3",
+    "firebase-admin": "^9.1.1"
   }
 }
