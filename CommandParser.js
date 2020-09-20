@@ -149,7 +149,7 @@ module.exports = class CommandParser{
 	async recipes(options,author){
 		const recipes = await this.gameManager.getRecipes(author.id,options);
 		return this.makeEmbed('Recipes',
-			recipes.map((recipe)=>recipe.toString() ).join('')
+			recipes.map((recipe)=>recipe.toString() ).join('\n')
 		);
 	}
 	async reset(options,author){
